@@ -1,0 +1,890 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Il negozio 🛍️</title>
+  <style>
+    :root {
+      --bg: #05070b;
+      --panel: #0c1016;
+      --panel-soft: rgba(255,255,255,0.03);
+      --panel-softer: rgba(255,255,255,0.05);
+      --border: rgba(255,255,255,0.1);
+      --text: #ffffff;
+      --muted: #94a3b8;
+      --muted-2: #64748b;
+      --accent: #ffffff;
+      --accent-text: #000000;
+      --blue-soft: rgba(99,102,241,0.12);
+      --blue-border: rgba(99,102,241,0.35);
+      --blue-text: #c7d2fe;
+      --danger: #ef4444;
+      --shadow: none;
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 430px;
+      margin: 0 auto;
+      padding: 16px 12px 28px;
+    }
+
+    .stack { display: grid; gap: 14px; }
+    .hero h1 {
+      margin: 0;
+      font-size: 2rem;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+    .hero p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .button, .icon-btn, .tab-btn, .pill-btn {
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .button {
+      width: 100%;
+      height: 48px;
+      border-radius: 18px;
+      background: var(--accent);
+      color: var(--accent-text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-weight: 700;
+    }
+    .button:hover { opacity: 0.92; }
+
+    .button.secondary {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border-color: var(--border);
+      font-weight: 600;
+    }
+
+    .panel {
+      background: var(--panel-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .search-wrap {
+      position: relative;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted-2);
+      width: 16px;
+      height: 16px;
+      pointer-events: none;
+    }
+
+    .field, .select, .textarea {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      min-height: 44px;
+      padding: 0 14px;
+      outline: none;
+    }
+
+    .field::placeholder, .textarea::placeholder { color: var(--muted-2); }
+    .field.search { padding-left: 38px; }
+    .textarea {
+      min-height: 88px;
+      padding: 12px 14px;
+      resize: vertical;
+    }
+
+    .filters-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      background: rgba(255,255,255,0.05);
+      padding: 5px;
+      border-radius: 18px;
+    }
+
+    .tab-btn {
+      height: 40px;
+      border-radius: 14px;
+      background: transparent;
+      color: var(--text);
+      border: 0;
+      font-weight: 700;
+    }
+
+    .tab-btn.active {
+      background: #ffffff;
+      color: #000000;
+    }
+
+    .cards {
+      display: grid;
+      gap: 12px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 16px;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: 1.8rem;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+      text-transform: capitalize;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      line-height: 1;
+      border: 0;
+      white-space: nowrap;
+    }
+
+    .badge.category {
+      background: rgba(255,255,255,0.10);
+      color: #e2e8f0;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .badge.total {
+      background: rgba(99,102,241,0.15);
+      color: var(--blue-text);
+      font-weight: 600;
+    }
+
+    .actions {
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 16px;
+      background: transparent;
+      color: #cbd5e1;
+      border: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .icon-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .icon-btn.danger:hover { background: rgba(239,68,68,0.14); color: #fecaca; }
+
+    .qty-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .qty-card {
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      padding: 12px;
+      min-width: 0;
+    }
+    .qty-card.highlight {
+      background: var(--blue-soft);
+      border-color: var(--blue-border);
+    }
+
+    .qty-head {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #e2e8f0;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .qty-head svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .qty-controls {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .qty-number {
+      min-width: 32px;
+      text-align: center;
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .pill-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .pill-btn:hover { background: rgba(255,255,255,0.10); }
+
+    .notes {
+      margin-top: 14px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      padding: 12px;
+    }
+    .notes-label {
+      color: var(--muted-2);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+    .notes-text {
+      color: #cbd5e1;
+      font-size: 0.92rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 34px 18px;
+      color: var(--muted);
+    }
+    .empty h3 {
+      margin: 10px 0 0;
+      color: #fff;
+      font-size: 1.1rem;
+    }
+    .empty p { margin: 8px 0 0; }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 50;
+    }
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      width: 100%;
+      max-width: 430px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 18px;
+      max-height: 92vh;
+      overflow: auto;
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .modal-head h2 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    .close-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .form-row {
+      display: grid;
+      gap: 8px;
+    }
+
+    .form-two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    label {
+      font-size: 0.88rem;
+      color: #e2e8f0;
+      font-weight: 600;
+    }
+
+    .muted-icon {
+      color: var(--muted-2);
+    }
+
+    .hidden { display: none !important; }
+
+    @media (min-width: 700px) {
+      .app {
+        max-width: 980px;
+        padding: 24px 18px 40px;
+      }
+      .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .qty-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .qty-card {
+        padding: 14px;
+      }
+      .qty-head {
+        gap: 8px;
+        font-size: 0.82rem;
+      }
+      .qty-head svg {
+        width: 20px;
+        height: 20px;
+      }
+      .qty-controls {
+        margin-top: 12px;
+        gap: 10px;
+      }
+      .qty-number {
+        min-width: 40px;
+        font-size: 2rem;
+      }
+      .pill-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 1.35rem;
+      }
+      .modal { max-width: 520px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app stack">
+    <section class="hero">
+      <h1>Il negozio 🛍️</h1>
+      <p>Tieni sotto controllo le scorte tra casa e cantina.</p>
+    </section>
+
+    <button class="button" id="openAddBtn">
+      <span>＋</span>
+      <span>Nuovo prodotto</span>
+    </button>
+
+    <section class="panel stack">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <input id="searchInput" class="field search" placeholder="Cerca prodotto, categoria, note..." />
+      </div>
+
+      <div class="filters-grid">
+        <select id="categoryFilter" class="select">
+          <option value="tutte">Tutte le categorie</option>
+        </select>
+        <select id="locationFilter" class="select">
+          <option value="tutte">Tutti i luoghi</option>
+          <option value="Casa">Casa</option>
+          <option value="Cantina">Cantina</option>
+        </select>
+      </div>
+
+      <button class="button secondary" id="clearFiltersBtn">
+        <span>↺</span>
+        <span>Svuota filtri</span>
+      </button>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="tutto">Tutto</button>
+        <button class="tab-btn" data-tab="casa">Casa</button>
+        <button class="tab-btn" data-tab="cantina">Cantina</button>
+      </div>
+    </section>
+
+    <section id="cards" class="cards"></section>
+
+    <section id="emptyState" class="panel empty hidden">
+      <div style="font-size: 2rem;">📦</div>
+      <h3>Nessun prodotto trovato</h3>
+      <p>Prova a cambiare i filtri o aggiungi un nuovo articolo.</p>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <h2 id="modalTitle">Nuovo prodotto</h2>
+        <button class="close-btn" id="closeModalBtn" aria-label="Chiudi">✕</button>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-row">
+          <label for="nameInput">Nome prodotto</label>
+          <input id="nameInput" class="field" placeholder="Es. crema corpo vaniglia" />
+        </div>
+
+        <div class="form-row">
+          <label for="categoryInput">Categoria</label>
+          <select id="categoryInput" class="select"></select>
+        </div>
+
+        <div class="form-two">
+          <div class="form-row">
+            <label for="casaInput">Casa</label>
+            <input id="casaInput" class="field" type="number" min="0" inputmode="numeric" />
+          </div>
+          <div class="form-row">
+            <label for="cantinaInput">Cantina</label>
+            <input id="cantinaInput" class="field" type="number" min="0" inputmode="numeric" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="notesInput">Note</label>
+          <textarea id="notesInput" class="textarea" placeholder="Marca, profumo, dettagli..."></textarea>
+        </div>
+
+        <button class="button" id="saveBtn">Salva prodotto</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'il-negozio-scorte-html-v1';
+    const categories = ['Cura corpo', 'Detergenti', 'Alimenti', 'Altro'];
+
+    const initialItems = [
+      {
+        id: crypto.randomUUID(),
+        name: 'Crema corpo',
+        category: 'Cura corpo',
+        casa: 2,
+        cantina: 10,
+        notes: 'Vari marchi e fragranze',
+      },
+      {
+        id: crypto.randomUUID(),
+        name: 'Sapone solido',
+        category: 'Cura corpo',
+        casa: 1,
+        cantina: 7,
+        notes: 'Doppioni e scorte regalo',
+      },
+      {
+        id: crypto.randomUUID(),
+        name: 'Spray pulizia bagno',
+        category: 'Detergenti',
+        casa: 2,
+        cantina: 1,
+        notes: 'Uno aperto, due chiusi',
+      },
+    ];
+
+    let items = loadItems();
+    let query = '';
+    let categoryFilter = 'tutte';
+    let locationFilter = 'tutte';
+    let activeTab = 'tutto';
+    let editingId = null;
+
+    const cardsEl = document.getElementById('cards');
+    const emptyStateEl = document.getElementById('emptyState');
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilterEl = document.getElementById('categoryFilter');
+    const locationFilterEl = document.getElementById('locationFilter');
+    const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+    const tabButtons = Array.from(document.querySelectorAll('.tab-btn'));
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const modalTitle = document.getElementById('modalTitle');
+    const openAddBtn = document.getElementById('openAddBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const nameInput = document.getElementById('nameInput');
+    const categoryInput = document.getElementById('categoryInput');
+    const casaInput = document.getElementById('casaInput');
+    const cantinaInput = document.getElementById('cantinaInput');
+    const notesInput = document.getElementById('notesInput');
+
+    fillCategorySelects();
+    bindEvents();
+    render();
+
+    function loadItems() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return initialItems;
+        const parsed = JSON.parse(saved);
+        if (!Array.isArray(parsed)) return initialItems;
+
+        return parsed.map((item) => {
+          if (typeof item.casa === 'number' && typeof item.cantina === 'number') {
+            return {
+              id: item.id || crypto.randomUUID(),
+              name: item.name || 'Prodotto',
+              category: item.category || 'Altro',
+              casa: item.casa,
+              cantina: item.cantina,
+              notes: item.notes || '',
+            };
+          }
+
+          const quantity = Number(item.quantity || 0);
+          const legacyLocation = item.location || 'Cantina';
+          return {
+            id: item.id || crypto.randomUUID(),
+            name: item.name || 'Prodotto',
+            category: item.category || 'Altro',
+            casa: legacyLocation === 'Casa' ? quantity : 0,
+            cantina: legacyLocation === 'Cantina' ? quantity : 0,
+            notes: item.notes || '',
+          };
+        });
+      } catch {
+        return initialItems;
+      }
+    }
+
+    function saveItems() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    function fillCategorySelects() {
+      categories.forEach((category) => {
+        const option1 = document.createElement('option');
+        option1.value = category;
+        option1.textContent = category;
+        categoryFilterEl.appendChild(option1);
+
+        const option2 = document.createElement('option');
+        option2.value = category;
+        option2.textContent = category;
+        categoryInput.appendChild(option2);
+      });
+    }
+
+    function bindEvents() {
+      searchInput.addEventListener('input', (e) => {
+        query = e.target.value.trim().toLowerCase();
+        render();
+      });
+
+      categoryFilterEl.addEventListener('change', (e) => {
+        categoryFilter = e.target.value;
+        render();
+      });
+
+      locationFilterEl.addEventListener('change', (e) => {
+        locationFilter = e.target.value;
+        render();
+      });
+
+      clearFiltersBtn.addEventListener('click', () => {
+        query = '';
+        categoryFilter = 'tutte';
+        locationFilter = 'tutte';
+        activeTab = 'tutto';
+        searchInput.value = '';
+        categoryFilterEl.value = 'tutte';
+        locationFilterEl.value = 'tutte';
+        updateTabButtons();
+        render();
+      });
+
+      tabButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          activeTab = btn.dataset.tab;
+          updateTabButtons();
+          render();
+        });
+      });
+
+      openAddBtn.addEventListener('click', () => openModal());
+      closeModalBtn.addEventListener('click', closeModal);
+      modalBackdrop.addEventListener('click', (e) => {
+        if (e.target === modalBackdrop) closeModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modalBackdrop.classList.contains('open')) closeModal();
+      });
+
+      saveBtn.addEventListener('click', saveForm);
+    }
+
+    function updateTabButtons() {
+      tabButtons.forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.tab === activeTab);
+      });
+    }
+
+    function openModal(item = null) {
+      editingId = item ? item.id : null;
+      modalTitle.textContent = item ? 'Modifica prodotto' : 'Nuovo prodotto';
+      saveBtn.textContent = item ? 'Salva modifiche' : 'Salva prodotto';
+
+      nameInput.value = item?.name || '';
+      categoryInput.value = item?.category || 'Altro';
+      casaInput.value = item?.casa ?? 0;
+      cantinaInput.value = item?.cantina ?? 1;
+      notesInput.value = item?.notes || '';
+
+      modalBackdrop.classList.add('open');
+      modalBackdrop.setAttribute('aria-hidden', 'false');
+      setTimeout(() => nameInput.focus(), 10);
+    }
+
+    function closeModal() {
+      editingId = null;
+      modalBackdrop.classList.remove('open');
+      modalBackdrop.setAttribute('aria-hidden', 'true');
+    }
+
+    function saveForm() {
+      const name = nameInput.value.trim();
+      if (!name) {
+        alert('Inserisci il nome del prodotto.');
+        nameInput.focus();
+        return;
+      }
+
+      const payload = {
+        id: editingId || crypto.randomUUID(),
+        name,
+        category: categoryInput.value || 'Altro',
+        casa: Math.max(0, Number(casaInput.value || 0)),
+        cantina: Math.max(0, Number(cantinaInput.value || 0)),
+        notes: notesInput.value.trim(),
+      };
+
+      if (editingId) {
+        items = items.map((item) => item.id === editingId ? payload : item);
+      } else {
+        items = [payload, ...items];
+      }
+
+      saveItems();
+      closeModal();
+      render();
+    }
+
+    function getFilteredItems() {
+      return items
+        .filter((item) => {
+          const haystack = [item.name, item.category, item.notes].join(' ').toLowerCase();
+          const matchQuery = haystack.includes(query);
+          const hasCasa = item.casa > 0;
+          const hasCantina = item.cantina > 0;
+          const matchCategory = categoryFilter === 'tutte' || item.category === categoryFilter;
+          const matchLocation = locationFilter === 'tutte' ||
+            (locationFilter === 'Casa' && hasCasa) ||
+            (locationFilter === 'Cantina' && hasCantina);
+          const matchTab = activeTab === 'tutto' ||
+            (activeTab === 'casa' && hasCasa) ||
+            (activeTab === 'cantina' && hasCantina);
+
+          return matchQuery && matchCategory && matchLocation && matchTab;
+        })
+        .sort((a, b) => a.name.localeCompare(b.name, 'it', { sensitivity: 'base' }));
+    }
+
+    function changeQuantity(id, field, delta) {
+      items = items.map((item) => {
+        if (item.id !== id) return item;
+        return {
+          ...item,
+          [field]: Math.max(0, Number(item[field] || 0) + delta),
+        };
+      });
+      saveItems();
+      render();
+    }
+
+    function deleteItem(id) {
+      const confirmed = window.confirm('Vuoi davvero eliminare questo prodotto?');
+      if (!confirmed) return;
+      items = items.filter((item) => item.id !== id);
+      saveItems();
+      render();
+    }
+
+    function icon(type) {
+      if (type === 'search') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>';
+      if (type === 'home') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path></svg>';
+      if (type === 'warehouse') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"></path><path d="M8 21v-7h8v7"></path></svg>';
+      if (type === 'edit') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>';
+      if (type === 'trash') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg>';
+      return '';
+    }
+
+    function render() {
+      const filtered = getFilteredItems();
+      cardsEl.innerHTML = '';
+      emptyStateEl.classList.toggle('hidden', filtered.length > 0);
+
+      filtered.forEach((item) => {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-top">
+            <div style="min-width:0;">
+              <h3 class="card-title">${escapeHtml(item.name)}</h3>
+              <div class="badges">
+                <span class="badge category">${escapeHtml(item.category)}</span>
+                <span class="badge total">Totale ${item.casa + item.cantina}</span>
+              </div>
+            </div>
+            <div class="actions">
+              <button class="icon-btn" data-action="edit" data-id="${item.id}" aria-label="Modifica">${icon('edit')}</button>
+              <button class="icon-btn danger" data-action="delete" data-id="${item.id}" aria-label="Elimina">${icon('trash')}</button>
+            </div>
+          </div>
+
+          <div class="qty-grid">
+            <div class="qty-card ${item.casa >= item.cantina ? 'highlight' : ''}">
+              <div class="qty-head">${icon('home')}<span>Casa</span></div>
+              <div class="qty-controls">
+                <button class="pill-btn" data-action="minus" data-field="casa" data-id="${item.id}" aria-label="Diminuisci casa">−</button>
+                <div class="qty-number">${item.casa}</div>
+                <button class="pill-btn" data-action="plus" data-field="casa" data-id="${item.id}" aria-label="Aumenta casa">＋</button>
+              </div>
+            </div>
+
+            <div class="qty-card">
+              <div class="qty-head">${icon('warehouse')}<span>Cantina</span></div>
+              <div class="qty-controls">
+                <button class="pill-btn" data-action="minus" data-field="cantina" data-id="${item.id}" aria-label="Diminuisci cantina">−</button>
+                <div class="qty-number">${item.cantina}</div>
+                <button class="pill-btn" data-action="plus" data-field="cantina" data-id="${item.id}" aria-label="Aumenta cantina">＋</button>
+              </div>
+            </div>
+          </div>
+
+          ${item.notes ? `
+            <div class="notes">
+              <div class="notes-label">Note</div>
+              <div class="notes-text">${escapeHtml(item.notes)}</div>
+            </div>
+          ` : ''}
+        `;
+        cardsEl.appendChild(card);
+      });
+
+      cardsEl.querySelectorAll('[data-action]').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          const action = e.currentTarget.dataset.action;
+          const id = e.currentTarget.dataset.id;
+          const field = e.currentTarget.dataset.field;
+          const item = items.find((x) => x.id === id);
+
+          if (action === 'edit' && item) openModal(item);
+          if (action === 'delete') deleteItem(id);
+          if (action === 'minus') changeQuantity(id, field, -1);
+          if (action === 'plus') changeQuantity(id, field, 1);
+        });
+      });
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+  </script>
+</body>
+</html>
